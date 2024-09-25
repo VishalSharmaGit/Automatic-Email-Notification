@@ -1,0 +1,36 @@
+function sendEmailNotification() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var lastRow = ss.getLastRow(); 
+
+  var range = ss.getRange(lastRow, 1, 1, ss.getLastColumn());
+
+  var values = range.getValues();
+  
+  var recipient = ss.getRange(lastRow,3).getValue(); // Add your email here
+  var subject = "Reminder: You Succesfully upload your document";
+
+  var Name = ss.getRange(ss.getLastRow(), 2).getValues();
+  var Phone_number = ss.getRange(ss.getLastRow(), 5).getValues();
+  var Email_Id = ss.getRange(ss.getLastRow(), 3).getValues();
+  var Address = ss.getRange(ss.getLastRow(), 4).getValues();
+  var Comments = ss.getRange(ss.getLastRow(), 6).getValues();
+  var Date_time = ss.getRange(ss.getLastRow(), 1).getValues();
+  
+
+  
+  // Customize the email body with row details
+  var message = "The Uploaded Documents are:\n\n" + "Name :"+ Name +  "\nPhone_number :"+ Phone_number +  "\nEmail_Id :"+ Email_Id +  "\nAddress :"+ Address +  "\nComments :"+ Comments +  "\nDate_time :"+ Date_time;
+
+  MailApp.sendEmail(recipient, subject, message);
+}
+
+// onEdit Trigger
+function onEdit(e) {
+  var sheet = e.source.getActiveSheet();
+  var range = e.range;
+  
+  // Detect if the edit is on a new row
+  if (range.getRow() === sheet.getLastRow()) {
+    sendEmailNotification();
+  }
+}
